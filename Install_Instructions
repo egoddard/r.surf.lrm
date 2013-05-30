@@ -1,0 +1,12 @@
+Installation procedure with terminal commands
+1.Copy the r.surf.lrm folder to your grass source's scripts folder. Example:
+cp -r r.surf.lrm/ ~/source/grass_trunk/scripts/
+
+2. change directory to the r.surf.lrm folder and run make.
+cd ~/source/grass_trunk/scripts/r.surf.lrm
+make
+
+3. Change directory back to the grass source root directory and run sudo make install. This will update the grass7 install to include the new script. It isn't necessary to re-run configure or make here.
+cd ~/source/grass_trunk
+sudo make install
+

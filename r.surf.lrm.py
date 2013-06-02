@@ -91,7 +91,7 @@ def main():
 
     #Run the low pass filter on input map
     grass.message("Running low pass filter on %s." % input_map)
-    grass.run_command("r.neighbors", input=input_map, output=lp_out,
+    grass.run_command("r.neighbors", _input=input_map, output=lp_out,
                       size=kernel, method="average")
 
     #Subtract the result of the low pass filter from the input map
@@ -102,16 +102,16 @@ def main():
 
     #Extract the zero contours
     grass.message("Extracting zero contours from low pass difference...")
-    grass.run_command("r.contour", input=lp_subtract, output=LP_contour,
+    grass.run_command("r.contour", _input=lp_subtract, output=LP_contour,
                       minlevel="0", maxlevel="0", step="10")
-    grass.run_command("v.to.points", input=LP_contour, llayer="1", type="line",
-                      output=LP_points, dmax="10")
-    grass.run_command("v.what.rast", map=LP_points, raster=input_map,
+    grass.run_command("v.to.points", _input=LP_contour, llayer="1",
+                      _type="line", output=LP_points, dmax="10")
+    grass.run_command("v.what.rast", _map=LP_points, raster=input_map,
                       layer="2", column="along")
 
     #Get mean distance between points to optimize spline interpolation
     meanDist = grass.parse_command("v.surf.bspline", flags="e",
-                                   input=LP_points, raster_output=LP_purged,
+                                   _input=LP_points, raster_output=LP_purged,
                                    layer="2", column="along",
                                    method="linear")
 
@@ -126,9 +126,9 @@ def main():
     grass.message("Interpolating purged surface using a spline step value of \
                   %.0f..." % splineStep)
     #Interpolate using v.surf.bspline with meanDist * 2 as sie and sin
-    grass.run_command("v.surf.bspline", input=LP_points,
+    grass.run_command("v.surf.bspline", _input=LP_points,
                       raster_output=LP_purged, layer="2", sie=splineStep,
-                      sin=splineStep, column="along", method="bilinear")
+                      sin=splineStep, column="along", method="linear")
 
     #Subtract the purged surface from input surface to get the local relief and
     #apply a grey color table.
@@ -136,7 +136,7 @@ def main():
     grass.mapcalc("$lrm_output = $input_map - $LP_purged",
                   lrm_output=lrm_output, input_map=input_map,
                   LP_purged=LP_purged)
-    grass.run_command("r.colors", map=lrm_output, color="differences")
+    grass.run_command("r.colors", _map=lrm_output, color="differences")
 
     grass.message("Done.")
 

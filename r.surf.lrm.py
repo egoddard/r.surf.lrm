@@ -113,7 +113,7 @@ def main():
     meanDist = grass.parse_command("v.surf.bspline", flags="e",
                                    input=LP_points, raster_output=LP_purged,
                                    layer="2", column="along",
-                                   method="bilinear")
+                                   method="linear")
 
     #The -e flag on v.surf.bspline returns a length 1 dictionary key string
     #containing the Estimated point density and mean distance between points,
